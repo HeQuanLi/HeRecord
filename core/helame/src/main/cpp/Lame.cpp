@@ -114,7 +114,6 @@ Java_com_he_lame_HeLame_encodeInterleaved(
         jint samples,
         jbyteArray mp3buf
 ) {
-    //把Java传过来参数转成C中的参数进行修改
     jshort *j_pcm_buffer = (*env).GetShortArrayElements(pcm, nullptr);
 
     const jsize mp3buf_size = (*env).GetArrayLength(mp3buf);
