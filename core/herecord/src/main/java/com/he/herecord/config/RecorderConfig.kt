@@ -22,6 +22,7 @@ class RecorderConfig private constructor(
     val highPassFreq: Int,              // –highpass freq	设定高通滤波起始点为 freq 低于这个频率的声音会被截除。 Hz -1=no filter
     val bufferSize: Int,                // 缓冲区大小
     val format: Formats,                // 编码格式。默认原始PCM
+    val maxRecordTime: Int,             // 最大录音时长(单位：秒)，默认：-1:无限时长
     val saveFilePath: String? = null,   // 文件保存地址，默认沙盒地址。/data/data/package/cache/Record/
 ) {
     class Builder {
@@ -34,6 +35,7 @@ class RecorderConfig private constructor(
         private var lowPassFreq: Int = -1
         private var highPassFreq: Int = -1
         private var format: Formats = Formats.PCM
+        private var maxRecordTime: Int = -1
         private var saveFilePath: String? = null
 
         fun setAudioSource(audioSource: Int) = apply { this.audioSource = audioSource }
@@ -45,6 +47,7 @@ class RecorderConfig private constructor(
         fun setLowPassFreq(lowPassFreq: Int) = apply { this.lowPassFreq = lowPassFreq }
         fun setHighPassFreq(highPassFreq: Int) = apply { this.highPassFreq = highPassFreq }
         fun setEncodeFormat(format: Formats) = apply { this.format = format }
+        fun setMaxRecordTime(maxRecordTime: Int) = apply { this.maxRecordTime = maxRecordTime }
         fun setSaveFilePath(path: String) = apply { this.saveFilePath = path }
 
         fun build(): RecorderConfig {
@@ -60,6 +63,7 @@ class RecorderConfig private constructor(
                 highPassFreq,
                 bufferSize,
                 format,
+                maxRecordTime,
                 saveFilePath = saveFilePath ?: RecordPathUtils.getDefaultRecordFile(format),
             )
         }

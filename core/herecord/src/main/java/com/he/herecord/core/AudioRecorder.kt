@@ -68,6 +68,15 @@ class AudioRecorder(
         val buffer = ShortArray(config.bufferSize)
         startTime = System.currentTimeMillis()
         while (isRecording.get()) {
+            // Check if max recording time is exceeded
+            if (config.maxRecordTime > 0) {
+                val elapsedTimeSeconds = (System.currentTimeMillis() - startTime) / 1000
+                if (elapsedTimeSeconds >= config.maxRecordTime) {
+                    stopRecording()
+                    break
+                }
+            }
+
             val read = audioRecord?.read(buffer, 0, buffer.size) ?: 0
             if (read > 0) {
                 val data = ShortArray(read)
@@ -77,7 +86,9 @@ class AudioRecorder(
         }
         // Signal end of recording
         audioQueue.offer(ShortArray(0))
-        recorderListener?.onStopped()
+        handler.post {
+            recorderListener?.onStopped()
+        }
     }
 
     private fun encodeAudio() {
